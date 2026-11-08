@@ -4,11 +4,11 @@ from starlette.responses import StreamingResponse
 import cv2
 import uvicorn
 import io
-from fastapi import File
+from fastapi import File, HTTPException
 from fastapi import FastAPI
 from fastapi import UploadFile
 import numpy as np
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 import config
 import inference
@@ -29,7 +29,15 @@ async def combine_images(output, resized, name):
 
 @app.post("/{style}")
 async def get_image(style: str, file: UploadFile = File(...)):
-    image = np.array(Image.open(file.file))
+    if style not in config.STYLES:
+        raise HTTPException(status_code=404, detail="Unknown style")
+
+    try:
+        with Image.open(file.file) as uploaded_image:
+            image = np.array(uploaded_image.convert("RGB"))
+    except (UnidentifiedImageError, OSError, ValueError):
+        raise HTTPException(status_code=400, detail="Upload a valid image")
+
     model = config.STYLES[style]
     start = time.time()
     output, resized = inference.inference(model, image)

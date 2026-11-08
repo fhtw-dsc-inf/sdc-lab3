@@ -31,10 +31,10 @@ RUN pip install -r requirements.txt
 # Copy the rest of the application code into the container at /app
 COPY . .
 
-# Expose the port that Streamlit will run on
-# This environment variable is used by Streamlit to set the port
-# that the Streamlit server will run on
-EXPOSE ${STREAMLIT_SERVER_PORT}
+# Set the default port; docker run -e or Compose can override it at runtime.
+ENV STREAMLIT_SERVER_PORT=8501
+# Document the default port. EXPOSE does not configure or publish the server.
+EXPOSE 8501
 
 # Run the Streamlit application
-CMD ["streamlit", "run", "main.py", "--server.port", "8501"]
+CMD ["streamlit", "run", "main.py"]

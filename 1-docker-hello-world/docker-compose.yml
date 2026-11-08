@@ -5,4 +5,4 @@ services:
     build: .
     image: codingmoh/python-hello-world
     ports:
-      - 80:80
+      - "80:8080"

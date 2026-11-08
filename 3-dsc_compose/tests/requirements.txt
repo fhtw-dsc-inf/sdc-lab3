@@ -1,0 +1,5 @@
+-r ../backend/requirements.txt
+# OpenCV 4.9 wheels require the NumPy 1.x ABI outside the Python 3.8 image.
+numpy<2
+requests
+httpx

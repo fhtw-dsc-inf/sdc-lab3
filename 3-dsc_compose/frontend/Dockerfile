@@ -7,6 +7,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE ${STREAMLIT_SERVER_PORT}
+ENV STREAMLIT_SERVER_PORT=8501
+EXPOSE 8501
 
 CMD ["streamlit", "run", "main.py"]
